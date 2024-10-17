@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather-App</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+
+  <div class="app">
+    <div class="search">
+      <input type="text" name="location" id="location" placeholder="Enter Location" onchange="getData()">
+    </div>
+
+    <div class="container">
+      <div class="top">
+
+        <div>
+          <p id="place"> </p>
+        </div>
+
+        <div>
+          <h1 id="temperature"> </h1>
+        </div>
+
+        <div>
+          <p id="description"></p>
+        </div>
+
+      </div>
+
+      <div class="bottom hidden">
+
+        <div class="feels">
+          <p class="bold" id="feelLike"> </p>
+          <p>Feel Like</p>
+        </div>
+
+        <div class="humidity">
+          <p class="bold" id="humidity"> </p>
+          <p>Humidity</p>
+        </div>
+
+        <div class="wind">
+          <p class="bold" id="windSpeed"> </p>
+          <p>Wind Speed</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+    async function getData() {
+      let place, tempC, weather, feels_like, humidityPercentage, windSpeed;
+      const inputValue = document.getElementById("location").value;
+      const url = `https://api.weatherapi.com/v1/current.json?key=ea585d60d9254015bb263345243007&q=${inputValue}&aqi=no`;
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        place = data.location.name;
+        tempC = data.current.temp_c;
+        console.log(tempC)
+        weather = data.current.condition.text;
+        feels_like = data.current.feelslike_c;
+        humidityPercentage = data.current.humidity;
+        windSpeed = data.current.wind_mph;
+
+        const placeName = document.getElementById("place");
+        placeName.innerHTML = place;
+
+        const temperature = document.getElementById("temperature");
+        temperature.innerHTML = tempC + " °C";
+
+        const weatherCondition = document.getElementById("description");
+        weatherCondition.innerHTML = weather;
+
+        const feelLike = document.getElementById("feelLike");
+        feelLike.innerHTML = feels_like + " °C";
+
+        const humidity = document.getElementById("humidity");
+        humidity.innerHTML = humidityPercentage + " %";
+
+        const wind = document.getElementById("windSpeed");
+        wind.innerHTML = windSpeed + " mph";
+
+        document.getElementById("location").value = "";
+      } catch (error) {
+        const tempUndefined = document.getElementById("temperature");
+        tempUndefined.innerHTML = "Not found";
+      }
+    }
+
+  </script>
+
+</body>
+
+</html>
